@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "782464844748",
+    "project_id": "firesmash-b6f5c",
+    "storage_bucket": "firesmash-b6f5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782464844748:android:442800288fb8e2887bd369",
+        "android_client_info": {
+          "package_name": "com.firesmash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782464844748-9796opc9na45svisbuk7f544vvenbf89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firesmash",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ1jhAGdlCxj9hZu1W8fy4n9af35Dl7XU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
