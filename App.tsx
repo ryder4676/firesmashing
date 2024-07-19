@@ -3,32 +3,42 @@
 // GoogleSignin.configure({
 //   webClientId: '782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com',
 // });
-import React, { useEffect, useState } from 'react';
-import { Button, View, Text, Alert } from 'react-native';
+import React, { useEffect } from 'react';
+import { Button, View, Text, Alert, Image } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import type { StackScreenProps } from '@react-navigation/stack';
+import { Button as ElementsButton } from 'react-native-elements';
 
+// Replace with your web client ID
 GoogleSignin.configure({
-  webClientId: '782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com', // Replace with your web client ID
+  webClientId: '782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com',
 });
 
-const Stack = createStackNavigator();
+type RootStackParamList = {
+  Home: undefined;
+  Dashboard: { user: { name: string; email: string } };
+};
 
-const HomeScreen = ({ navigation }) => {
+const Stack = createStackNavigator<RootStackParamList>();
+
+type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const onGoogleButtonPress = async () => {
     try {
       // Check if your device supports Google Play
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
       // Get the user's ID token
-      const { idToken } = await GoogleSignin.signIn();
+      const { idToken, user } = await GoogleSignin.signIn();
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       // Sign-in the user with the credential
       await auth().signInWithCredential(googleCredential);
       Alert.alert('Signed in with Google!');
-      navigation.navigate('Dashboard');
+      navigation.navigate('Dashboard', { user: { name: user.name, email: user.email } });
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('User cancelled the login flow');
@@ -44,15 +54,25 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button
-        title="Google Sign-In"
-        onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+      <ElementsButton
+        title="Sign in with Google"
+        onPress={onGoogleButtonPress}
+        icon={
+          <Image
+            source={require('./assets/google-logo.png')}
+            style={{ width: 24, height: 24, marginRight: 10 }}
+          />
+        }
       />
     </View>
   );
 };
 
-const DashboardScreen = ({ navigation }) => {
+type DashboardScreenProps = StackScreenProps<RootStackParamList, 'Dashboard'>;
+
+const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) => {
+  const { user } = route.params;
+
   const handleSignOut = async () => {
     try {
       await auth().signOut();
@@ -67,13 +87,14 @@ const DashboardScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Dashboard</Text>
+      <Text>Welcome, {user.name}!</Text>
+      <Text>Email: {user.email}</Text>
       <Button title="Sign Out" onPress={handleSignOut} />
     </View>
   );
 };
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
@@ -85,3 +106,4 @@ const App = () => {
 };
 
 export default App;
+
