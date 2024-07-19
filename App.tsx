@@ -3,39 +3,27 @@
 // GoogleSignin.configure({
 //   webClientId: '782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com',
 // });
-import React, { useEffect } from 'react';
-import { Button, View, Text, Alert, Image } from 'react-native';
+import React from 'react';
+import { View, Alert, Image, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import type { StackScreenProps } from '@react-navigation/stack';
-import { Button as ElementsButton } from 'react-native-elements';
 
 // Replace with your web client ID
 GoogleSignin.configure({
   webClientId: '782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com',
 });
 
-type RootStackParamList = {
-  Home: undefined;
-  Dashboard: { user: { name: string; email: string } };
-};
+const Stack = createStackNavigator();
 
-const Stack = createStackNavigator<RootStackParamList>();
-
-type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
-
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+const HomeScreen = ({ navigation }) => {
+  
   const onGoogleButtonPress = async () => {
     try {
-      // Check if your device supports Google Play
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-      // Get the user's ID token
       const { idToken, user } = await GoogleSignin.signIn();
-      // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      // Sign-in the user with the credential
       await auth().signInWithCredential(googleCredential);
       Alert.alert('Signed in with Google!');
       navigation.navigate('Dashboard', { user: { name: user.name, email: user.email } });
@@ -53,24 +41,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ElementsButton
-        title="Sign in with Google"
-        onPress={onGoogleButtonPress}
-        icon={
-          <Image
-            source={require('./assets/google-logo.png')}
-            style={{ width: 24, height: 24, marginRight: 10 }}
-          />
-        }
-      />
+    <View style={styles.container}>
+      <Text>Welcome to the Awesome Fresmash App!</Text>
+      <TouchableOpacity onPress={onGoogleButtonPress}>
+        <Image
+          source={require('./assets/google-logo.png')}
+          style={styles.logo}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
 
-type DashboardScreenProps = StackScreenProps<RootStackParamList, 'Dashboard'>;
-
-const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) => {
+const DashboardScreen = ({ route, navigation }) => {
   const { user } = route.params;
 
   const handleSignOut = async () => {
@@ -86,7 +69,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) 
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       <Text>Welcome, {user.name}!</Text>
       <Text>Email: {user.email}</Text>
       <Button title="Sign Out" onPress={handleSignOut} />
@@ -94,7 +77,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) 
   );
 };
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
@@ -105,5 +88,16 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 48,
+    height: 48,
+  },
+});
 
+export default App;
