@@ -17,7 +17,11 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) 
       Alert.alert('Signed out successfully!');
       navigation.navigate('Home');
     } catch (error) {
-      console.error('Something went wrong with sign out: ', error);
+      if (error instanceof Error) {
+        console.error('Something went wrong with sign out: ', error.message);
+      } else {
+        console.error('Something went wrong with sign out');
+      }
     }
   };
 
@@ -29,7 +33,6 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) 
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
