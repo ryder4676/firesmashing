@@ -20,6 +20,7 @@ const FacebookSignInButton: React.FC<FacebookSignInButtonProps> = ({ onSignIn })
 
       // Get the user's AccessToken
       const data = await AccessToken.getCurrentAccessToken();
+      
 
       if (!data) {
         console.log('Error obtaining access token');

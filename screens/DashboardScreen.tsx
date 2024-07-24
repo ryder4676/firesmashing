@@ -4,6 +4,7 @@ import React from 'react';
 import { View, Text, Button, Alert, StyleSheet } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { LoginManager } from 'react-native-fbsdk-next';
 import { DashboardScreenProps } from '../navigation/Navigation';
 
 const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) => {
@@ -11,9 +12,28 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ route, navigation }) 
 
   const handleSignOut = async () => {
     try {
-      await auth().signOut();
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
+      // Sign out from Firebase
+      const currentUser = auth().currentUser;
+      if (currentUser) {
+        await auth().signOut();
+      } else {
+        console.log('No Firebase user signed in');
+      }
+
+      // Sign out from Google if signed in
+      const googleUserInfo = await GoogleSignin.getCurrentUser();
+      if (googleUserInfo) {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        console.log('Google sign-out successful');
+      } else {
+        console.log('No Google user signed in');
+      }
+
+      // Sign out from Facebook
+      LoginManager.logOut();
+      console.log('Facebook log-out successful');
+
       Alert.alert('Signed out successfully!');
       navigation.navigate('Home');
     } catch (error) {

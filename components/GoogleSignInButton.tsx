@@ -8,6 +8,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 
 GoogleSignin.configure({
   webClientId: '782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com', // Replace with your web client ID
+   offlineAccess: true,
 });
 
 type GoogleSignInButtonProps = {
