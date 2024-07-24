@@ -4,10 +4,10 @@
 //   webClientId: '782464844748-a0e42itsbp61e0cqd5chvg24o6328gja.apps.googleusercontent.com',
 // });
 // App.tsx
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Settings } from 'react-native-fbsdk-next'; // Import Settings to initialize the SDK
 import HomeScreen from './screens/HomeScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import { RootStackParamList } from './navigation/Navigation';
@@ -15,6 +15,11 @@ import { RootStackParamList } from './navigation/Navigation';
 const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
+  // Initialize Facebook SDK
+  React.useEffect(() => {
+    Settings.initializeSDK();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
