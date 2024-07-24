@@ -11,7 +11,7 @@ const FacebookSignInButton: React.FC<FacebookSignInButtonProps> = ({ onSignIn })
   const onFacebookButtonPress = async () => {
     try {
       // Attempt to log in with Facebook
-      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      const result = await LoginManager.logInWithPermissions(['public_profile']);
 
       if (result.isCancelled) {
         console.log('User cancelled the login process');
